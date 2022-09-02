@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod 655
+chmod -R 755 /opt/lampp/htdocs
