@@ -1,2 +1,2 @@
 #!/bin/bash
-chmod -R drwxr-xr-x /alx-system_engineering-devops/0x01-shell_permissions
+chmod 755 755 /alx-system_engineering-devops/0x01-shell_permissions
