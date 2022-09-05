@@ -1,4 +1,4 @@
 #!/bin/bash
 git add .
-git commit -m 'second chance'
+git commit -m 'Shell Permission projects'
 git push
