@@ -1,2 +1,2 @@
-#!/bin/bas:ih
+#!/bin/bash
 echo "hello "$USER
