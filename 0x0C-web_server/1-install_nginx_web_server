@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# This script installs Nginx and sets up a custom Hello World! page on port 80.
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Install Nginx if not installed
+apt-get update
+apt-get install -y nginx
+
+# Replace the default index.html with "Hello World!"
+echo "Hello World!" > /var/www/html/index.html
+
+# Restart Nginx using service (not systemctl)
+service nginx restart
+    
