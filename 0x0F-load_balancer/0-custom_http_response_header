@@ -1,0 +1,35 @@
+#!/bin/bash
+# 0-custom_http_response_header
+
+# Update package list and install nginx
+apt-get update -y
+apt-get install -y nginx
+
+# Enable nginx service without using systemctl restart (use service)
+service nginx stop || true
+
+# Backup default site config if not already done
+if [ ! -f /etc/nginx/sites-available/default.bak ]; then
+    cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+fi
+
+# Configure nginx to add X-Served-By header with hostname
+cat > /etc/nginx/sites-available/default <<EOF
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        add_header X-Served-By \$hostname;
+        try_files \$uri \$uri/ =404;
+    }
+}
+EOF
+
+# Start nginx service
+service nginx start
