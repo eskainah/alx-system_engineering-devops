@@ -1,16 +1,38 @@
 #!/usr/bin/env bash
 
-# Check if at least 4 arguments are provided
-if [ "$#" -lt 4 ]; then
+# Check for exactly 4 arguments
+if [ "$#" -ne 4 ]; then
     echo "Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
     exit 1
 fi
 
-# Assign input parameters to variables
 FILE_PATH="$1"
 SERVER_IP="$2"
 USERNAME="$3"
 SSH_KEY="$4"
 
-# Transfer the file to the user's home directory on the server
+# Check if the file exists
+if [ ! -f "$FILE_PATH" ] || [ ! -r "$FILE_PATH" ]; then
+    echo "Error: '$FILE_PATH' does not exist or is not readable"
+    exit 1
+fi
+
+# Check if SSH key exists
+if [ ! -f "$SSH_KEY" ] || [ ! -r "$SSH_KEY" ]; then
+    echo "Error: SSH key '$SSH_KEY' does not exist or is not readable"
+    exit 1
+fi
+
+# Show remote home directory contents BEFORE transfer
+echo "📂 Remote contents BEFORE transfer:"
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$USERNAME@$SERVER_IP" 'ls ~/'
+
+# Transfer the file
+echo "📤 Transferring $FILE_PATH to $USERNAME@$SERVER_IP:~/"
 scp -i "$SSH_KEY" -o StrictHostKeyChecking=no "$FILE_PATH" "$USERNAME@$SERVER_IP:~/"
+
+# Show remote home directory contents AFTER transfer
+echo "📂 Remote contents AFTER transfer:"
+ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no "$USERNAME@$SERVER_IP" 'ls ~/'
+
+echo "✅ Transfer complete."
